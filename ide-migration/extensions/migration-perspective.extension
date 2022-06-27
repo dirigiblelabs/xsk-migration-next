@@ -1,0 +1,5 @@
+{
+    "module": "ide-migration/services/migration-perspective.js",
+    "extensionPoint": "ide-perspective",
+    "description": "Migration perspective"
+}
