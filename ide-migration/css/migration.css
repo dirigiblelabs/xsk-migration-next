@@ -1,0 +1,3 @@
+.diff-view {
+  border: var(--sapElement_BorderWidth, .0625rem) solid var(--sapNeutralBorderColor, #6a6d70);
+}

@@ -1,5 +1,5 @@
 {
-    "module": "ide-migration/services/migration-launch-view.js",
+    "module": "ide-migration/services/history-view.js",
     "extensionPoint": "ide-view",
-    "description": "SAP HANA XS Classic Migration"
+    "description": "Migration History"
 }

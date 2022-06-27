@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  ~ Copyright (c) 2010-2021 SAP and others.
+  ~ Copyright (c) 2010-2022 SAP and others.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the Eclipse Public License v2.0
   ~ which accompanies this distribution, and is available at
@@ -8,15 +8,38 @@
   ~ Contributors:
   ~ SAP - initial API and implementation
   -->
-<html lang="en" ng-app="migration" ng-controller="MigrationViewController as mvc" xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+<html lang="en" ng-app="migration" ng-controller="MigrationPerspectiveController" xmlns="http://www.w3.org/1999/xhtml">
 
-        <!-- Project-specific stuff -->
-        <!-- <script type="text/javascript" src="js/migration-perspective.js"></script> -->
-    </head>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <body>
-    </body>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=" dg-brand-icon />
+
+    <title dg-brand-title></title>
+
+    <script type="text/javascript" src="services/migration-perspective.js"></script>
+
+    <theme></theme>
+    <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-perspective-js"></script>
+
+    <link type="text/css" rel="stylesheet" href="/services/v4/js/ide-core/services/loader.js?id=ide-perspective-css" />
+
+    <script type="text/javascript" src="js/migration.js"></script>
+  </head>
+
+  <body>
+    <ide-header menu-data-url="/services/v4/js/ide-core/services/menu.js"></ide-header>
+    <ide-contextmenu></ide-contextmenu>
+
+    <ide-container>
+      <view ng-show="currentView === 'history'" id="migration-history"></view>
+      <view ng-show="currentView === 'zip'" id="zip-migration"></view>
+    </ide-container>
+
+    <ide-dialogs></ide-dialogs>
+    <ide-status-bar></ide-status-bar>
+  </body>
+
 </html>

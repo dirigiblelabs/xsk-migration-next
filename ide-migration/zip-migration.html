@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2010-2022 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="zip-migration" ng-controller="ZipMigrationViewController">
+
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=" />
+
+        <title dg-view-title></title>
+
+        <script type="text/javascript" src="services/zip-migration-view.js"></script>
+
+        <theme></theme>
+
+        <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-view-js"></script>
+        <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=file-upload-js"></script>
+
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/ide-core/services/loader.js?id=ide-view-css" />
+
+        <script type="text/javascript" src="/services/v4/web/ide-workspace-service/workspace.js"></script>
+        <script type="text/javascript" src="/services/v4/web/ide-transport-service/transport.js"></script>
+
+        <script src="js/zip-migration.js"></script>
+    </head>
+
+    <body>
+        <input id="input" style="display: none" type="file" nv-file-select="" uploader="uploader" multiple
+            accept=".zip" />
+        <main class="fd-page fd-page--transparent dg-full-height">
+            <header>
+                <fd-bar class="fd-bar--page-m_l" cozy="true">
+                    <fd-bar-left>
+                        <fd-bar-element>
+                            <h1 fd-title header-size="3">Migrate Delivery Unit(s) from Zip</h1>
+                        </fd-bar-element>
+                    </fd-bar-left>
+                    <fd-bar-right>
+                        <fd-bar-element>
+                            <span>Save files in:</span>
+                        </fd-bar-element>
+                        <fd-bar-element>
+                            <fd-popover dg-align="right">
+                                <fd-popover-control>
+                                    <fd-button compact="true" state="{{ uploader.isUploading ? 'disabled' : '' }}"
+                                        is-menu="true" dg-label="{{ selectedWorkspace.name }}">
+                                    </fd-button>
+                                </fd-popover-control>
+                                <fd-popover-body dg-align="right" no-arrow="true">
+                                    <fd-menu>
+                                        <fd-menu-item title="{{ name }}" ng-repeat="name in workspaceNames"
+                                            is-selected="{{ isSelectedWorkspace(name) }}"
+                                            ng-click="switchWorkspace(name)">
+                                        </fd-menu-item>
+                                    </fd-menu>
+                                </fd-popover-body>
+                            </fd-popover>
+                        </fd-bar-element>
+                        <fd-bar-element>
+                            <fd-button compact="true" state="{{ uploader.isUploading ? 'disabled' : '' }}"
+                                glyph="sap-icon--add" title="Add files" dg-label="Add" ng-click="addFiles()">
+                            </fd-button>
+                        </fd-bar-element>
+                    </fd-bar-right>
+                </fd-bar>
+            </header>
+            <div class="fd-page__content--m_l fd-scrollbar dg-page__content-card dg-full-height" role="region"
+                nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
+                <div ng-hide="uploader.queue.length > 0" class="fd-message-page">
+                    <div class="fd-message-page__container" ng-show="uploader.isHTML5" nv-file-over=""
+                        uploader="uploader">
+                        <div class="fd-message-page__icon-container">
+                            <i role="presentation" class="sap-icon--upload-to-cloud fd-message-page__icon"></i>
+                        </div>
+                        <div role="status" aria-live="polite" class="fd-message-page__content">
+                            <div class="fd-message-page__title">
+                                Upload Delivery Units
+                            </div>
+                            <div class="fd-message-page__subtitle">
+                                Drop zip file(s) here, or use the "+" button.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <fd-card card-type="list" ng-show="uploader.queue.length > 0">
+                    <fd-card-content>
+                        <fd-list byline="true">
+                            <fd-list-item ng-repeat="item in uploader.queue">
+                                <fd-list-thumbnail glyph="sap-icon--attachment-zip-file"></fd-list-thumbnail>
+                                <fd-list-content item-title="{{ item.file.name }}">
+                                    <div ng-show="item.isUploading" class="fd-progress-indicator" tabindex="-1"
+                                        role="progressbar" aria-valuemin="0" aria-valuenow="{{ item.progress }}"
+                                        aria-valuemax="100" aria-valuetext="{{ item.progress }}%"
+                                        aria-label="{{ item.progress }}%">
+                                        <div class="fd-progress-indicator__container">
+                                            <div class="fd-progress-indicator__progress-bar"
+                                                ng-style="{ 'min-width': item.progress + '%', 'width': item.progress + '%' }">
+                                            </div>
+                                            <div class="fd-progress-indicator__remaining">
+                                                <span class="fd-progress-indicator__label">{{ item.progress }}%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span ng-hide="item.isReady || item.isUploading || item.isSuccess" fd-object-status
+                                        status="positive"
+                                        text="{{ item.file.size > 10240 ? (item.file.size/1024/1024|number:2) + ' MB' : (item.file.size/1024|number:1) + ' kB' }}"></span>
+                                    <span ng-show="item.isSuccess" fd-object-status status="informative"
+                                        text="Uploaded"></span>
+                                </fd-list-content>
+                                <!-- <fd-button ng-hide="item.isReady || item.isUploading || item.isSuccess" fd-list-button
+                                    dg-type="transparent" glyph="sap-icon--upload" aria-label="Upload"
+                                    ng-click="item.upload()">
+                                </fd-button> -->
+                                <fd-button ng-hide="item.isReady || item.isUploading || item.isSuccess" fd-list-button
+                                    dg-type="transparent" glyph="sap-icon--decline" aria-label="Remove"
+                                    ng-click="item.remove()">
+                                </fd-button>
+                                <fd-button ng-show="item.isUploading" fd-list-button dg-type="transparent"
+                                    glyph="sap-icon--cancel" aria-label="Cancel" ng-click="item.cancel()">
+                                </fd-button>
+                            </fd-list-item>
+                        </fd-list>
+                    </fd-card-content>
+                </fd-card>
+            </div>
+            <footer>
+                <fd-bar class="fd-bar--page-m_l" bar-design="footer">
+                    <fd-bar-right>
+                        <fd-bar-element>
+                            <fd-button compact="true" dg-type="emphasized" dg-label="Migrate" state="disabled"
+                                ng-click="migrate()">
+                            </fd-button>
+                        </fd-bar-element>
+                        <fd-bar-element>
+                            <fd-button compact="true" dg-label="Cancel" ng-click="cancel()"></fd-button>
+                        </fd-bar-element>
+                    </fd-bar-right>
+                </fd-bar>
+            </footer>
+        </main>
+    </body>
+
+</html>

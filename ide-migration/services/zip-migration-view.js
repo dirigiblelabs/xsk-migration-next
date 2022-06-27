@@ -10,11 +10,12 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 const viewData = {
-    id: "migration-history",
-    label: "Migration History",
+    id: "zip-migration",
+    label: "Migration from ZIP",
     factory: "frame",
+    lazyLoad: true,
     region: "center",
-    link: "../ide-migration/history.html",
+    link: "../ide-migration/zip-migration.html",
 };
 if (typeof exports !== 'undefined') {
     exports.getView = function () {

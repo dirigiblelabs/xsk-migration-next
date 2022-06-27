@@ -1,0 +1,5 @@
+{
+    "module": "ide-migration/services/zip-migration-view.js",
+    "extensionPoint": "ide-view",
+    "description": "Migration from ZIP"
+}

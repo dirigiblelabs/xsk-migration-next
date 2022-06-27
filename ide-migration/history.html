@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  ~ Copyright (c) 2010-2021 SAP and others.
+  ~ Copyright (c) 2010-2022 SAP and others.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the Eclipse Public License v2.0
   ~ which accompanies this distribution, and is available at
@@ -8,15 +8,89 @@
   ~ Contributors:
   ~ SAP - initial API and implementation
   -->
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="history" ng-controller="HistoryViewController">
 
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=" />
-    </head>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=" />
 
-    <body ng-app="history" ng-controller="HistoryViewController">
-    </body>
+    <title dg-view-title></title>
+
+    <script type="text/javascript" src="services/history-view.js"></script>
+
+    <theme></theme>
+
+    <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-view-js"></script>
+
+    <link type="text/css" rel="stylesheet" href="/services/v4/js/ide-core/services/loader.js?id=ide-view-css" />
+
+    <script src="js/history.js"></script>
+  </head>
+
+  <body>
+    <main class="fd-page fd-page--transparent dg-full-height">
+      <header>
+        <fd-bar class="fd-bar--page-m_l" cozy="true">
+          <fd-bar-left>
+            <fd-bar-element>
+              <h1 fd-title header-size="3">XSK Migration</h1>
+            </fd-bar-element>
+          </fd-bar-left>
+          <fd-bar-right>
+            <fd-bar-element>
+              <fd-popover compact="true" dg-align="right">
+                <fd-popover-control>
+                  <fd-button compact="true" dg-label="Migrate" dg-type="emphasized" is-menu="true">
+                  </fd-button>
+                </fd-popover-control>
+                <fd-popover-body dg-align="right" no-arrow="true">
+                  <fd-menu>
+                    <fd-menu-item title="Live project" ng-click="liveProject()"></fd-menu-item>
+                    <fd-menu-item title="ZIP project" ng-click="zipProject()"></fd-menu-item>
+                  </fd-menu>
+                </fd-popover-body>
+              </fd-popover>
+            </fd-bar-element>
+          </fd-bar-right>
+        </fd-bar>
+      </header>
+      <div class="fd-page__content--m_l fd-scrollbar dg-page__content-card dg-full-height" role="region">
+        <fd-card card-type="table">
+          <fd-card-header interactive="false">
+            <fd-card-title>Migrations History</fd-card-title>
+          </fd-card-header>
+          <fd-card-content>
+            <table fd-table inner-borders="none">
+              <thead fd-table-header>
+                <tr fd-table-row>
+                  <th fd-table-header-cell>Executed by</th>
+                  <th fd-table-header-cell>Started at</th>
+                  <th fd-table-header-cell>Updated at</th>
+                  <th fd-table-header-cell>Status</th>
+                  <th fd-table-header-cell></th>
+                </tr>
+              </thead>
+              <tbody fd-table-body>
+                <tr fd-table-row hoverable="item.status === 'MIGRATION_CONTINUE'" ng-repeat="item in historyData"
+                  activable="item.status === 'MIGRATION_CONTINUE'">
+                  <td fd-table-cell>{{ item.executedBy }}</td>
+                  <td fd-table-cell>{{ item.startedAt }}</td>
+                  <td fd-table-cell>{{ item.updatedAt }}</td>
+                  <td fd-table-cell>
+                    <span ng-init="itemStatus = getStatus(item.status)" fd-object-status status="{{ itemStatus.type }}"
+                      text="{{ itemStatus.text }}"></span>
+                  </td>
+                  <td ng-if="item.status === 'MIGRATION_CONTINUE'" fd-table-cell fit-content="true">
+                    <i fd-table-icon navigation="true" glyph="sap-icon--slim-arrow-right"></i>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </fd-card-content>
+        </fd-card>
+      </div>
+    </main>
+  </body>
 
 </html>
