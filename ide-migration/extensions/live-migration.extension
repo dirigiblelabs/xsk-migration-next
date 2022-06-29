@@ -1,0 +1,5 @@
+{
+    "module": "ide-migration/services/live-migration-view.js",
+    "extensionPoint": "ide-view",
+    "description": "Live Migration"
+}

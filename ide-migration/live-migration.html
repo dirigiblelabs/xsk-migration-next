@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2010-2022 SAP and others.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v2.0
+  ~ which accompanies this distribution, and is available at
+  ~ http://www.eclipse.org/legal/epl-v20.html
+  ~ Contributors:
+  ~ SAP - initial API and implementation
+  -->
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="live-migration"
+    ng-controller="LiveMigrationViewController">
+
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" sizes="any" href="data:;base64,iVBORw0KGgo=" />
+
+        <title dg-view-title></title>
+
+        <script type="text/javascript" src="services/live-migration-view.js"></script>
+
+        <theme></theme>
+
+        <script type="text/javascript" src="/services/v4/js/ide-core/services/loader.js?id=ide-view-js"></script>
+
+        <link type="text/css" rel="stylesheet" href="/services/v4/js/ide-core/services/loader.js?id=ide-view-css" />
+
+        <link type="text/css" rel="stylesheet" href="css/migration.css" />
+
+        <script type="text/javascript" src="/services/v4/web/ide-workspace-service/workspace.js"></script>
+
+        <script src="js/live-migration.js"></script>
+    </head>
+
+    <body class="dg-vbox">
+        <fd-wizard class="dg-flex--wizard dg-full-height" dg-size="md" current-step="wizard.currentStep"
+            completed-steps="wizard.completedSteps">
+            <header>
+                <fd-bar bar-design="header-with-subheader" cozy="true" size="m_l">
+                    <fd-bar-left>
+                        <fd-bar-element>
+                            <h1 fd-title header-size="3">Live Migration</h1>
+                        </fd-bar-element>
+                    </fd-bar-left>
+                </fd-bar>
+                <fd-wizard-navigation></fd-wizard-navigation>
+            </header>
+            <fd-wizard-content class="fd-scrollbar">
+                <fd-wizard-step dg-label="BTP Neo Credentials" indicator-label="1"
+                    indicator-glyph="{{ getIndicatorGlyph(1) }}" step-click="gotoStep(step)">
+
+                    <h3>Provide your BTP NEO Credentials</h3>
+                    <div class="fd-container fd-form-layout-grid-container wizard-form-container-style">
+                        <div class="fd-row">
+                            <div class="fd-col fd-col-md--2">
+                                <fd-form-label for="input-region" dg-required="true">Region:</fd-form-label>
+                            </div>
+                            <div class="fd-col fd-col--full">
+                                <fd-combobox-input class="dg-full-width" label-id="input-region"
+                                    dropdown-items="regionItems" dg-placeholder="Find or enter region"
+                                    dropdown-fixed="true" ng-model="selectedRegion" ng-change="test()"
+                                    dg-aria-label="regions">
+                                </fd-combobox-input>
+                            </div>
+                        </div>
+
+                        <div class="fd-row">
+                            <div class="fd-col fd-col-md--2">
+                                <fd-form-label for="input-stn" dg-required="true">Subaccount technical name:
+                                </fd-form-label>
+                            </div>
+                            <div class="fd-col fd-col--full">
+                                <fd-input id="input-stn" type="text"></fd-input>
+                            </div>
+                        </div>
+
+                        <div class="fd-row">
+                            <div class="fd-col fd-col-md--2">
+                                <fd-form-label for="input-username" dg-required="true">Username:
+                                </fd-form-label>
+                            </div>
+                            <div class="fd-col fd-col--full">
+                                <fd-input id="input-username" type="text" placeholder="email@example.com"></fd-input>
+                            </div>
+                        </div>
+
+                        <div class="fd-row">
+                            <div class="fd-col fd-col-md--2">
+                                <fd-form-label for="input-pw" dg-required="true">Password:
+                                </fd-form-label>
+                            </div>
+                            <div class="fd-col fd-col--full">
+                                <fd-form-item>
+                                    <fd-input-group>
+                                        <fd-input id="input-pw" type="text" in-group="true">
+                                        </fd-input>
+                                        <fd-input-group-addon>
+                                            <fd-button glyph="sap-icon--hide" dg-aria-desc="show/hide password"
+                                                in-group="true"></fd-button>
+                                        </fd-input-group-addon>
+                                    </fd-input-group>
+                                </fd-form-item>
+                            </div>
+                        </div>
+                    </div>
+
+                </fd-wizard-step>
+                <fd-wizard-step dg-label="HANA Credentials" indicator-label="2"
+                    indicator-glyph="{{ getIndicatorGlyph(2) }}" step-click="gotoStep(step)">
+                    <div>Step 2 content</div>
+                </fd-wizard-step>
+                <fd-wizard-step dg-label="Delivery Units" indicator-label="3"
+                    indicator-glyph="{{ getIndicatorGlyph(3) }}" step-click="gotoStep(step)">
+                    <div>Step 3 content</div>
+                </fd-wizard-step>
+                <fd-wizard-step dg-label="Changes" indicator-label="4" indicator-glyph="{{ getIndicatorGlyph(4) }}"
+                    step-click="gotoStep(step)">
+                    <div>Step 4 content</div>
+                </fd-wizard-step>
+                <fd-wizard-summary>
+                    <div>Summary content</div>
+                </fd-wizard-summary>
+            </fd-wizard-content>
+            <footer>
+                <fd-bar bar-design="footer" in-page="true" size="m_l">
+                    <fd-bar-right>
+                        <fd-bar-element>
+                            <fd-button ng-if="!allStepsCompleted()" dg-label="Previous" compact="true"
+                                ng-click="gotoPreviousStep()">
+                            </fd-button>
+                        </fd-bar-element>
+                        <fd-bar-element>
+                            <fd-button ng-if="!allStepsCompleted()" dg-label="{{ isLastStep() ? 'Finish' : 'Next' }}"
+                                dg-type="emphasized" compact="true" ng-click="gotoNextStep()"></fd-button>
+                        </fd-bar-element>
+                        <fd-bar-element>
+                            <fd-button ng-if="!allStepsCompleted()" dg-label="Cancel" dg-type="transparent"
+                                compact="true"></fd-button>
+                        </fd-bar-element>
+                        </fd-bar-left>
+                </fd-bar>
+            </footer>
+        </fd-wizard>
+    </body>
+
+</html>

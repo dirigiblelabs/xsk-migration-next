@@ -1,3 +1,7 @@
 .diff-view {
   border: var(--sapElement_BorderWidth, .0625rem) solid var(--sapNeutralBorderColor, #6a6d70);
 }
+.wizard-form-container-style {
+  max-width: 1600px;
+  margin: auto
+}
