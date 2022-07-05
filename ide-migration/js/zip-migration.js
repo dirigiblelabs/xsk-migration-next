@@ -144,6 +144,26 @@ zipMigrationView.controller('ZipMigrationViewController', ['$scope', '$window', 
             messageHub.hideLoadingDialog(
                 'xskZipMigration',
             );
+            messageHub.showDialog(
+                'Migration complete!',
+                'Succsesfully migrated the delivery unit(s). You can now go to Workbench and publish them.',
+                [{
+                    id: 'b1',
+                    type: 'emphasized',
+                    label: 'Go to Workbench',
+                },
+                {
+                    id: 'b2',
+                    type: 'normal',
+                    label: 'Migrate more',
+                },
+                {
+                    id: 'b3',
+                    type: 'transparent',
+                    label: 'Close',
+                }],
+                'xsk-migration.zip.dialog.done',
+            );
         }, 6000);
     };
 
@@ -169,6 +189,17 @@ zipMigrationView.controller('ZipMigrationViewController', ['$scope', '$window', 
         'zip.dialog.cancel',
         function (data) {
             if (data.data === 'b1') {
+                messageHub.postMessage('change.view', { view: 'history' });
+            }
+        },
+    );
+
+    messageHub.onDidReceiveMessage(
+        'zip.dialog.done',
+        function (data) {
+            if (data.data === 'b1') {
+                messageHub.openPerspective("../ide/index.html");
+            } else if (data.data === 'b3') {
                 messageHub.postMessage('change.view', { view: 'history' });
             }
         },
