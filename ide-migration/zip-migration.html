@@ -136,8 +136,8 @@
                 <fd-bar class="fd-bar--page-m_l" bar-design="footer">
                     <fd-bar-right>
                         <fd-bar-element>
-                            <fd-button compact="true" dg-type="emphasized" dg-label="Migrate" state="disabled"
-                                ng-click="migrate()">
+                            <fd-button compact="true" dg-type="emphasized" dg-label="Migrate"
+                                state="{{ uploader.queue.length === 0 ? 'disabled' : ''}}" ng-click="migrate()">
                             </fd-button>
                         </fd-bar-element>
                         <fd-bar-element>
