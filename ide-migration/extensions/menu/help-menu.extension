@@ -1,5 +1,5 @@
 {
-	"module": "ide/services/menu/help.js",
+	"module": "ide-core/services/menus/help.js",
 	"extensionPoint": "ide-migration-menu",
 	"description": "Help Menu"
 }
