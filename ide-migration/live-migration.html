@@ -46,99 +46,262 @@
                 </fd-bar>
                 <fd-wizard-navigation></fd-wizard-navigation>
             </header>
-            <fd-wizard-content class="fd-scrollbar">
+            <fd-busy-indicator-extended ng-show="isLoading" class="dg-fill-parent" dg-size="l">Loading...
+            </fd-busy-indicator-extended>
+            <fd-wizard-content ng-hide="isLoading" dg-size="md" class="fd-scrollbar">
                 <fd-wizard-step dg-label="BTP Neo Credentials" indicator-label="1"
                     indicator-glyph="{{ getIndicatorGlyph(1) }}" step-click="gotoStep(step)">
-
                     <h3>Provide your BTP NEO Credentials</h3>
-                    <div class="fd-container fd-form-layout-grid-container wizard-form-container-style">
+                    <fieldset class="fd-container fd-form-layout-grid-container wizard-form-container-style"
+                        ng-form="forms.neo">
                         <div class="fd-row">
                             <div class="fd-col fd-col-md--2">
-                                <fd-form-label for="input-region" dg-required="true">Region:</fd-form-label>
+                                <fd-form-label for="input-region" dg-required="true">
+                                    Region:
+                                </fd-form-label>
                             </div>
                             <div class="fd-col fd-col--full">
                                 <fd-combobox-input class="dg-full-width" label-id="input-region"
-                                    dropdown-items="regionItems" dg-placeholder="Find or enter region"
-                                    dropdown-fixed="true" ng-model="selectedRegion" ng-change="test()"
-                                    dg-aria-label="regions">
+                                    dropdown-items="neoInputs.region.items" dg-placeholder="Search for a region"
+                                    selected-value="neoInputs.region.selected" dg-aria-label="regions"
+                                    ng-model="neoInputs.region.selected" ng-required="true">
                                 </fd-combobox-input>
                             </div>
                         </div>
 
                         <div class="fd-row">
                             <div class="fd-col fd-col-md--2">
-                                <fd-form-label for="input-stn" dg-required="true">Subaccount technical name:
+                                <fd-form-label for="input-stn" dg-required="true">
+                                    Subaccount technical name:
                                 </fd-form-label>
                             </div>
                             <div class="fd-col fd-col--full">
-                                <fd-input id="input-stn" type="text"></fd-input>
+                                <fd-input id="input-stn" type="text" ng-model="neoInputs.subaccountTechnicalName"
+                                    ng-required="true">
+                                </fd-input>
                             </div>
                         </div>
 
                         <div class="fd-row">
                             <div class="fd-col fd-col-md--2">
-                                <fd-form-label for="input-username" dg-required="true">Username:
+                                <fd-form-label for="input-username-neo" dg-required="true">Username:
                                 </fd-form-label>
                             </div>
                             <div class="fd-col fd-col--full">
-                                <fd-input id="input-username" type="text" placeholder="email@example.com"></fd-input>
+                                <fd-form-input-message-group class="dg-full-width"
+                                    dg-inactive="{{ neoUsernameInput.state === '' ? true : false }}">
+                                    <fd-input id="input-username-neo" type="text" state="{{ neoUsernameInput.state }}"
+                                        placeholder="email@example.com" ng-model="neoInputs.username"
+                                        ng-required="true">
+                                    </fd-input>
+                                    <fd-form-message dg-type="{{ neoUsernameInput.state }}">
+                                        {{ neoUsernameInput.message }}
+                                    </fd-form-message>
+                                </fd-form-input-message-group>
                             </div>
                         </div>
 
                         <div class="fd-row">
                             <div class="fd-col fd-col-md--2">
-                                <fd-form-label for="input-pw" dg-required="true">Password:
+                                <fd-form-label for="input-pw-neo" dg-required="true">Password:
                                 </fd-form-label>
                             </div>
                             <div class="fd-col fd-col--full">
                                 <fd-form-item>
                                     <fd-input-group>
-                                        <fd-input id="input-pw" type="text" in-group="true">
+                                        <fd-input id="input-pw-neo" type="password" in-group="true"
+                                            ng-model="neoInputs.password" ng-required="true">
                                         </fd-input>
-                                        <fd-input-group-addon>
-                                            <fd-button glyph="sap-icon--hide" dg-aria-desc="show/hide password"
-                                                in-group="true"></fd-button>
+                                        <fd-input-group-addon has-button="true">
+                                            <fd-button ng-init="neoPassIcon = 'sap-icon--hide'"
+                                                glyph="{{ neoPassIcon }}" in-group="true"
+                                                aria-label="Show/Hide password"
+                                                ng-click="neoPassIcon = showPassword('input-pw-neo')"></fd-button>
                                         </fd-input-group-addon>
                                     </fd-input-group>
                                 </fd-form-item>
                             </div>
                         </div>
-                    </div>
+                    </fieldset>
 
                 </fd-wizard-step>
                 <fd-wizard-step dg-label="HANA Credentials" indicator-label="2"
                     indicator-glyph="{{ getIndicatorGlyph(2) }}" step-click="gotoStep(step)">
-                    <div>Step 2 content</div>
+                    <h3>Provide your HANA Credentials</h3>
+                    <fieldset class="fd-container fd-form-layout-grid-container wizard-form-container-style"
+                        ng-form="forms.hana">
+                        <div class="fd-row">
+                            <div class="fd-col fd-col-md--2">
+                                <fd-form-label for="input-region" dg-required="true">Database:</fd-form-label>
+                            </div>
+                            <div class="fd-col fd-col--full">
+                                <fd-combobox-input class="dg-full-width" label-id="input-region"
+                                    dropdown-items="hanaInputs.database.items" dg-placeholder="Select a database system"
+                                    selected-value="hanaInputs.database.selected" dg-aria-label="regions"
+                                    ng-model="hanaInputs.database.selected" ng-required="true">
+                                </fd-combobox-input>
+                            </div>
+                        </div>
+
+                        <div class="fd-row">
+                            <div class="fd-col fd-col-md--2">
+                                <fd-form-label for="input-username-hana" dg-required="true">Username:
+                                </fd-form-label>
+                            </div>
+                            <div class="fd-col fd-col--full">
+                                <fd-form-input-message-group class="dg-full-width"
+                                    dg-inactive="{{ hanaUsernameInput.state === '' ? true : false }}">
+                                    <fd-input id="input-username-hana" type="text" state="{{ hanaUsernameInput.state }}"
+                                        placeholder="email@example.com" ng-model="hanaInputs.username"
+                                        ng-required="true">
+                                    </fd-input>
+                                    <fd-form-message dg-type="{{ hanaUsernameInput.state }}">
+                                        {{ hanaUsernameInput.message }}
+                                    </fd-form-message>
+                                </fd-form-input-message-group>
+                            </div>
+                        </div>
+
+                        <div class="fd-row">
+                            <div class="fd-col fd-col-md--2">
+                                <fd-form-label for="input-pw-hana" dg-required="true">Password:
+                                </fd-form-label>
+                            </div>
+                            <div class="fd-col fd-col--full">
+                                <fd-form-item>
+                                    <fd-input-group>
+                                        <fd-input id="input-pw-hana" type="password" in-group="true"
+                                            ng-model="hanaInputs.password" ng-required="true">
+                                        </fd-input>
+                                        <fd-input-group-addon has-button="true">
+                                            <fd-button ng-init="hanaPassIcon = 'sap-icon--hide'"
+                                                glyph="{{ hanaPassIcon }}" in-group="true"
+                                                aria-label="Show/Hide password"
+                                                ng-click="hanaPassIcon = showPassword('input-pw-hana')"></fd-button>
+                                        </fd-input-group-addon>
+                                    </fd-input-group>
+                                </fd-form-item>
+                            </div>
+                        </div>
+                    </fieldset>
                 </fd-wizard-step>
                 <fd-wizard-step dg-label="Delivery Units" indicator-label="3"
                     indicator-glyph="{{ getIndicatorGlyph(3) }}" step-click="gotoStep(step)">
-                    <div>Step 3 content</div>
+                    <h3>Select the target workspace and delivery unit(s)</h3>
+                    <fieldset class="fd-container fd-form-layout-grid-container wizard-form-container-style"
+                        ng-form="forms.du">
+                        <div class="fd-row">
+                            <div class="fd-col fd-col-md--2">
+                                <fd-form-label for="input-workspace" dg-required="true">Workspace:</fd-form-label>
+                            </div>
+                            <div class="fd-col fd-col--full">
+                                <div class="dg-hbox dg-full-width dg-center">
+                                    <fd-combobox-input style="flex: 1; margin-right: .5rem;" label-id="input-workspace"
+                                        dropdown-items="duInputs.workspaces.items" dg-placeholder="Select a workspace"
+                                        selected-value="duInputs.workspaces.selected" dg-aria-label="regions"
+                                        ng-model="duInputs.workspaces.selected" ng-required="true">
+                                    </fd-combobox-input>
+                                    <fd-button glyph="sap-icon--add" dg-type="emphasized" dg-label="Create"
+                                        ng-click="createWorkspace()">
+                                    </fd-button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="fd-row">
+                            <div class="fd-col fd-col-md--2">
+                                <fd-form-label for="input-du" dg-required="true">Delivery unit(s):
+                                </fd-form-label>
+                            </div>
+                            <div class="fd-col fd-col--full">
+                                <fd-combobox-input class="dg-full-width" label-id="input-du"
+                                    dropdown-items="duInputs.du.items" dg-placeholder="Select delivery units"
+                                    selected-value="duInputs.du.selected" dg-aria-label="regions"
+                                    ng-model="duInputs.du.selected" ng-required="true">
+                                </fd-combobox-input>
+                            </div>
+                        </div>
+
+                    </fieldset>
                 </fd-wizard-step>
                 <fd-wizard-step dg-label="Changes" indicator-label="4" indicator-glyph="{{ getIndicatorGlyph(4) }}"
                     step-click="gotoStep(step)">
-                    <div>Step 4 content</div>
+                    <fd-toolbar has-title="true" no-bottom-border="true" dg-type="transparent">
+                        <h3>{{ changedFiles.changedFiles }} file(s) will be changed</h3>
+                        <fd-toolbar-spacer></fd-toolbar-spacer>
+                        <fd-segmented-button aria-label="Difference view type">
+                            <fd-button dg-label="Split" compact="true"
+                                state="{{ changes.diffType == 'split' ? 'selected' : '' }}"
+                                ng-click="diffViewType('split')">
+                            </fd-button>
+                            <fd-button dg-label="Unified" compact="true"
+                                state="{{ changes.diffType == 'unified' ? 'selected' : '' }}"
+                                ng-click="diffViewType('unified')">
+                            </fd-button>
+                        </fd-segmented-button>
+                    </fd-toolbar>
+                    <fd-panel expanded="true" ng-repeat="change in changes.changes track by $index">
+                        <fd-panel-header>
+                            <fd-panel-expand></fd-panel-expand>
+                            <h4 fd-panel-title>{{ change.path }}</h4>
+                        </fd-panel-header>
+                        <fd-panel-content aria-label="Panel Content" ng-init="params = getParams(change)">
+                            <embedded-view class="diff-view" view-id="diff" params="params"></embedded-view>
+                        </fd-panel-content>
+                    </fd-panel>
                 </fd-wizard-step>
-                <fd-wizard-summary>
-                    <div>Summary content</div>
+                <fd-wizard-summary class="dg-full-height">
+                    <fd-busy-indicator-extended ng-show="migrationStatus !== 'complete'" class="dg-fill-parent"
+                        dg-size="l">
+                        <span>
+                            <h3>Migration in progress.</h3>{{ migrationStatusMessage }}
+                        </span>
+                    </fd-busy-indicator-extended>
+                    <div ng-show="migrationStatus === 'complete'">
+                        <h3>Migration successfull</h3>
+                        <div class="fd-text">
+                            Migrated project(s) "APP_TEST1", "APP_TEST2" and "APP_TEST3".
+                            <br>
+                            You can now publish them from workspace "workspace".
+                        </div>
+                        <fd-wizard-next-step>
+                            <fd-button dg-label="Go to Workbench" dg-type="emphasized" ng-click="goToWorkbench()">
+                            </fd-button>
+                        </fd-wizard-next-step>
+                    </div>
                 </fd-wizard-summary>
             </fd-wizard-content>
             <footer>
                 <fd-bar bar-design="footer" in-page="true" size="m_l">
                     <fd-bar-right>
                         <fd-bar-element>
-                            <fd-button ng-if="!allStepsCompleted()" dg-label="Previous" compact="true"
-                                ng-click="gotoPreviousStep()">
+                            <fd-button ng-show="!allStepsCompleted() && wizard.currentStep !== 1" dg-label="Previous"
+                                compact="true" ng-click="gotoPreviousStep()">
                             </fd-button>
                         </fd-bar-element>
-                        <fd-bar-element>
-                            <fd-button ng-if="!allStepsCompleted()" dg-label="{{ isLastStep() ? 'Finish' : 'Next' }}"
-                                dg-type="emphasized" compact="true" ng-click="gotoNextStep()"></fd-button>
+                        <fd-bar-element ng-show="!allStepsCompleted()">
+                            <fd-button ng-show="wizard.currentStep === 1"
+                                state="{{ forms.neo.$valid ? '' : 'disabled' }}" dg-label="Next" dg-type="emphasized"
+                                compact="true" ng-click="gotoNextStep()"></fd-button>
+                            <fd-button ng-show="wizard.currentStep === 2"
+                                state="{{ forms.hana.$valid ? '' : 'disabled' }}" dg-label="Next" dg-type="emphasized"
+                                compact="true" ng-click="gotoNextStep()"></fd-button>
+                            <fd-button ng-show="wizard.currentStep === 3"
+                                state="{{ forms.du.$valid ? '' : 'disabled' }}" dg-label="Next" dg-type="emphasized"
+                                compact="true" ng-click="gotoNextStep()"></fd-button>
+                            <fd-button ng-show="wizard.currentStep === 4" dg-label="Migrate" dg-type="emphasized"
+                                compact="true" ng-click="gotoNextStep()"></fd-button>
                         </fd-bar-element>
                         <fd-bar-element>
-                            <fd-button ng-if="!allStepsCompleted()" dg-label="Cancel" dg-type="transparent"
-                                compact="true"></fd-button>
+                            <fd-button ng-show="!allStepsCompleted()" dg-label="Cancel" dg-type="transparent"
+                                compact="true" ng-click="cancel()"></fd-button>
                         </fd-bar-element>
-                        </fd-bar-left>
+                        <!-- fake button -->
+                        <fd-bar-element>
+                            <fd-button ng-show="wizard.completedSteps === 4" dg-label="Dummy button, change status"
+                                dg-type="emphasized" compact="true" ng-click="completeFakeMigration()"></fd-button>
+                        </fd-bar-element>
+                    </fd-bar-right>
                 </fd-bar>
             </footer>
         </fd-wizard>
