@@ -133,24 +133,35 @@ zipMigrationView.controller('ZipMigrationViewController', ['$scope', '$window', 
     };
 
     $scope.migrate = function () {
-        // Start upload and migration
+        messageHub.showLoadingDialog('xskZipMigration', 'Migration in progress', 'Configuration processing...',);
+        setTimeout(function () {
+            messageHub.updateLoadingDialog(
+                'xskZipMigration',
+                'Cleaning up...'
+            );
+        }, 4000);
+        setTimeout(function () {
+            messageHub.hideLoadingDialog(
+                'xskZipMigration',
+            );
+        }, 6000);
     };
 
     $scope.cancel = function () {
         messageHub.showDialog(
-            "Are you sure?",
+            'Are you sure?',
             'Any changes you made will be lost.',
             [{
-                id: "b1",
-                type: "emphasized",
-                label: "Yes",
+                id: 'b1',
+                type: 'emphasized',
+                label: 'Yes',
             },
             {
-                id: "b2",
-                type: "normal",
-                label: "No",
+                id: 'b2',
+                type: 'normal',
+                label: 'No',
             }],
-            "xsk-migration.zip.dialog.cancel"
+            'xsk-migration.zip.dialog.cancel',
         );
     };
 
