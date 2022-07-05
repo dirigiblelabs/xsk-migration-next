@@ -146,7 +146,7 @@ zipMigrationView.controller('ZipMigrationViewController', ['$scope', '$window', 
             );
             messageHub.showDialog(
                 'Migration complete!',
-                'Succsesfully migrated the delivery unit(s). You can now go to Workbench and publish them.',
+                'Successfully migrated the delivery unit(s). You can now go to Workbench and publish them.',
                 [{
                     id: 'b1',
                     type: 'emphasized',
