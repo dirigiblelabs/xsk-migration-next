@@ -177,6 +177,10 @@ liveMigrationView.controller('LiveMigrationViewController', ['$scope', '$window'
     };
 
     $scope.createWorkspace = function () {
+        let workspaceList = [];
+        for (let i = 0; i < $scope.duInputs.workspaces.items.length; i++) {
+            workspaceList.push($scope.duInputs.workspaces.items[i].text);
+        }
         messageHub.showFormDialog(
             'migrationCreateWorkspace',
             'Create a workspace',
@@ -187,7 +191,10 @@ liveMigrationView.controller('LiveMigrationViewController', ['$scope', '$window'
                     label: "Name",
                     required: true,
                     placeholder: "workspace name",
-                    pattern: '^[^/]*$',
+                    inputRules: {
+                        excluded: workspaceList,
+                        patterns: ['^[^/]*$'],
+                    },
                 },
             ],
             [{
